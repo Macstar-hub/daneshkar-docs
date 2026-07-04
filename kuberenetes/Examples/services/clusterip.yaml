@@ -1,0 +1,23 @@
+### Notes
+# FQDN: nginx-service.daneshkar.svc.cluster.local
+###
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  namespace: daneshkar
+  labels:
+    app: nginx
+    tier: prod
+    team: core-banking
+spec:
+  sessionAffinity: ClientIP ### None
+  selector:
+    app: nginx
+    tier: prod
+    team: core-banking
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

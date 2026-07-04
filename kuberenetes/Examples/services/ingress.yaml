@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+    - host: my-app.example.com # The domain name you want to use
+      http:
+        paths:
+          - path: / # Route all traffic from the root path
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx-service # Must match the name of your Service
+                port:
+                  number: 80 # Must match the Service 'port'

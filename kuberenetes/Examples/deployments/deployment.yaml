@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+    version: v1
+spec:
+  replicas: 2
+  # Deployments use RollingUpdate strategy by default, but it's good to be explicit
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values:
+          - nginx # FIXED: Must match template label (was 'backend')
+      - key: tier
+        operator: In
+        values:
+          - prod
+      - key: team
+        operator: In
+        values:
+          - core-banking # FIXED: '*' is not a wildcard in K8s, must match literal value
+  template:
+    metadata:
+      labels:
+        version: v2
+        app: nginx
+        tier: prod
+        team: core-banking
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:stable #daneshkar.repo.dev/backend/pyament:12342
+          ports:
+            - containerPort: 80

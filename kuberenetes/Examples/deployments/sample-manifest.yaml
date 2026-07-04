@@ -1,0 +1,39 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: nginx
+  name: sample-apllication
+  labels:
+    app: sample-apllication
+spec:
+  ports:
+    - port: 80
+      targetPort: 9990
+      name: sample-apllication
+  selector:
+    app: sample-apllication
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: sample-apllication
+  name: sample-apllication
+  namespace: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sample-apllication
+  template:
+    metadata:
+      labels:
+        app: sample-apllication
+      name: sample-apllication
+    spec:
+      containers:
+        - name: sample-apllication
+          image: docker.arvan.cloud/nginx:latest
+      restartPolicy: Always
