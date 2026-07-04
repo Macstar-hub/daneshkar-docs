@@ -13,10 +13,6 @@ The primary goal of this repository is to provide a structured, version-controll
 This repo is organized by technology stack to make navigation easy:
 
 - **`/kubernetes`**: Everything from basic Pods to complex Ingress and CronJob configurations.
-- **`/docker-compose`**: Local development setups and multi-container orchestration.
-- **`/ci-cd`**: Pipeline definitions (GitHub Actions, GitLab CI, Jenkins).
-- **`/terraform`**: Infrastructure as Code (IaC) modules for cloud providers.
-- **`/scripts`**: Utility bash/python scripts for automation.
 
 ## 🛠️ How to Use This Repo
 1. **Explore**: Browse the directories to find the technology you are currently studying.
