@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: hostpath-pv
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
+  hostPath:
+    path: /opt/pod-hostpath.dir
+    type: Directory
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - worker-01
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: hostpath-pvc
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pvc-example-pod-w-1
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: worker-01
+  volumes:
+    - name: shared-storage
+      persistentVolumeClaim:
+        claimName: hostpath-pvc
+  containers:
+    - name: sample-pod
+      image: curlimages/curl
+      command: ["sleep", "1000000"]
+      volumeMounts:
+        - name: shared-storage
+          mountPath: /data
+# ---
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   name: pvc-example-pod-w-2
+# spec:
+#   nodeSelector:
+#     kubernetes.io/hostname: worker-02
+#   volumes:
+#     - name: shared-storage
+#       persistentVolumeClaim:
+#         claimName: hostpath-pvc
+#   containers:
+#     - name: sample-pod
+#       image: curlimages/curl
+#       command: ["sleep", "1000000"]
+#       volumeMounts:
+#         - name: shared-storage
+#           mountPath: /data

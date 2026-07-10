@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cm-example-pod
+spec:
+  containers:
+    - name: writer
+      image: curlimages/curl
+      command: ["sleep", "1000000"]
+      env:
+        - name: TZ
+          value: Asia/tehran
+        - name: POD_INDEX
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['apps.kubernetes.io/pod-index']
+        - name: NodeId
+          value: "120$(POD_INDEX)"
+        - name: environment
+          valueFrom:
+            configMapKeyRef:
+              name: sample-cm
+              key: env
+      volumeMounts:
+        - name: config-volume
+          mountPath: /data
+  volumes:
+    - name: config-volume
+      configMap:
+        name: sample-cm
+        mode: "6600" ### -rw-rw------

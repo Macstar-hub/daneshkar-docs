@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nginx-statefulset
+  labels:
+    app: nginx
+    version: v1
+spec:
+  serviceName: "nginx-service"
+  replicas: 1
+  selector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values:
+          - nginx
+      - key: tier
+        operator: In
+        values:
+          - prod
+      - key: team
+        operator: In
+        values:
+          - core-banking
+  template:
+    metadata:
+      labels:
+        version: v2
+        app: nginx
+        tier: prod
+        team: core-banking
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: worker-01
+      containers:
+        - name: nginx
+          image: nginx:stable
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: my-storage
+              mountPath: /usr/share/nginx/html
+      volumes:
+        - name: my-storage
+          persistentVolumeClaim:
+            claimName: hostpath-pvc

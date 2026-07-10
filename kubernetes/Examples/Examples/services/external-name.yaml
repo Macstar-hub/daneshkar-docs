@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: google-external-service
+  namespace: daneshkar
+spec:
+  type: ExternalName
+  externalName: google.com

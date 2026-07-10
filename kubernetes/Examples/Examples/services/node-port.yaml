@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-nodeport-service
+  namespace: daneshkar
+  labels:
+    app: nginx
+    tier: prod
+    team: core-banking
+spec:
+  externalTrafficPolicy: Local
+  type: NodePort
+  selector:
+    app: nginx
+    tier: prod
+    team: core-banking
+  ports:
+    - protocol: TCP
+      port: 80 # The port used internally within the cluster
+      targetPort: 80 # The port the Nginx container is listening on
+      nodePort: 30007 # The port opened on all Cluster Nodes (Range: 30000-32767)
